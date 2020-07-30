@@ -1,0 +1,107 @@
+{
+  "private": true,
+  "name": "sms-service",
+  "version": "0.0.78",
+  "main": "build/server.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "scripts": {
+    "start": "node build/server.js",
+    "start:watch": "nodemon",
+    "test": "yarn test:unit && yarn test:integration",
+    "test:unit": "mocha 'test/unit/**/*.test.ts'",
+    "test:integration": "mocha test/bootstrap-integration.ts 'test/integration/**/*.test.ts'",
+    "test:watch": "yarn test --watch",
+    "build": "tsc --build",
+    "build:tests": "tsc -p ./test/tsconfig.json",
+    "clean": "rm -rf node_modules && rm -rf lib",
+    "clean:build": "rm -rf build",
+    "lint": "tslint './{src,test}/**/*.ts'",
+    "lint:fix": "yarn lint --fix",
+    "prettier": "prettier --write '{**/*,.}/*.{md,js,ts,json}'",
+    "sonar": "node sonar.js",
+    "coverage": "nyc --reporter=lcov yarn test:unit"
+  },
+  "dependencies": {
+    "@internal/cache-library": "^1.0.6",
+    "@internal/core-library": "^1.0.74",
+    "@internal/customer-service-client": "^1.0.89",
+    "@internal/errors-library": "^1.0.64",
+    "@internal/request-library": "^0.0.63",
+    "@internal/sms-service-client": "^0.0.17",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "knex": "^0.20.10",
+    "mysql": "^2.18.1",
+    "ramda": "^0.26.1",
+    "solclientjs": "^10.3.1",
+    "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.3",
+    "@types/chai-datetime": "^0.0.33",
+    "@types/chai-http": "3.0.5",
+    "@types/cors": "^2.8.6",
+    "@types/knex": "^0.16.1",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^13.1.4",
+    "@types/ramda": "^0.26.39",
+    "@types/sinon": "4.3.1",
+    "@types/sinon-chai": "3.2.1",
+    "@types/superagent": "^4.1.4",
+    "@types/uuid": "^8.0.0",
+    "casual": "^1.6.2",
+    "chai": "4.2.0",
+    "chai-datetime": "1.5.0",
+    "chai-http": "3.0.0",
+    "chai-like": "1.1.1",
+    "husky": "3.0.8",
+    "lint-staged": "9.4.2",
+    "mocha": "6.2.1",
+    "nodemon": "1.19.1",
+    "nyc": "14.1.1",
+    "prettier": "^1.18.2",
+    "sinon": "6.3.5",
+    "sinon-chai": "^3.2.0",
+    "sonarqube-scanner": "^2.5.0",
+    "ts-node": "8.4.1",
+    "tslint": "5.20.0",
+    "tslint-config-prettier": "1.18.0",
+    "tslint-microsoft-contrib": "6.2.0",
+    "typescript": "3.6.3"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "reporter": [
+      "text-summary",
+      "html",
+      "cobertura"
+    ],
+    "sourceMap": true,
+    "instrument": true,
+    "extension": [
+      ".ts"
+    ]
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "tslint -c tslint.json -p tsconfig.lint.json --fix",
+      "./ci/check-test-files.sh",
+      "prettier --config .prettierrc --write",
+      "git add"
+    ],
+    "*.{md,html,js,json,graphql}": [
+      "prettier --config .prettierrc --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}
