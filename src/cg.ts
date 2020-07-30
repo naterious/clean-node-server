@@ -1,9 +1,6 @@
 import composeApi from "./api";
-import composeApplication from "./application";
-import composeInfrastructure from "./infrastructure";
-
-const infrastructure = composeInfrastructure();
-const application = composeApplication();
+import * as application from "./application";
+import * as infrastructure from "./infrastructure";
 
 export const container = {
   infrastructure,
